@@ -70,12 +70,13 @@ buttons.forEach(elem => {
 
 function createPost(elem){
     data = formatDate(elem.created);
+    profileImage = checkProfileImage(elem);
     const template = `
     <div class="post">
         <div class="post__header">
             <div class="post-meta">                    
                 <div class="post-meta__icon">
-                    <img class="profile-pic" src=${elem.author.image} alt=${elem.author.name}>                    
+                    ${profileImage}                  
                 </div>
                 <div class="post-meta__data">
                     <div class="post-meta__author">${elem.author.name}</div>
@@ -112,4 +113,13 @@ function formatDate(data){
 
 function updateLikes(number, id){
     document.getElementById('like-counter-' + id).innerHTML = number;
+}
+
+function checkProfileImage(elem){
+    if (elem.author.image == null){
+        const nameSeparated = elem.author.name.split(' ');
+        return `<div class="profile-pic-default"><span>${nameSeparated[0][0]}${nameSeparated[1][0]}</span></div>`    
+    } else {
+        return `<img class="profile-pic" src=${elem.author.image} alt=${elem.author.name}>`
+    }  
 }
