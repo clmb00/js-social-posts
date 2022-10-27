@@ -55,8 +55,18 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
+let likedPosts = [];
 
 posts.forEach(createPost);
+
+const buttons = Array.from(document.getElementsByClassName('like-button'));
+buttons.forEach(elem => {
+    elem.addEventListener('click', function(){
+        this.classList.add('like-button--liked');
+        likedPosts.push(this.dataset.postid);
+        updateLikes(++posts[this.dataset.postid - 1].likes, this.dataset.postid);
+    })
+});
 
 function createPost(elem){
     data = formatDate(elem.created);
@@ -80,13 +90,13 @@ function createPost(elem){
         <div class="post__footer">
             <div class="likes js-likes">
                 <div class="likes__cta">
-                    <a class="like-button  js-like-button" href="#" data-postid="1">
+                    <a class="like-button  js-like-button" href="#" data-postid="${elem.id}">
                         <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                         <span class="like-button__label">Mi Piace</span>
                     </a>
                 </div>
                 <div class="likes__counter">
-                    Piace a <b id="like-counter-1" class="js-likes-counter">${elem.likes}</b> persone
+                    Piace a <b id="like-counter-${elem.id}" class="js-likes-counter">${elem.likes}</b> persone
                 </div>
             </div> 
         </div>            
@@ -98,4 +108,8 @@ function createPost(elem){
 function formatDate(data){
     const dataSplitted = data.split('-');
     return dataSplitted[2] + '/' + dataSplitted[1] + '/' + dataSplitted[0]
+}
+
+function updateLikes(number, id){
+    document.getElementById('like-counter-' + id).innerHTML = number;
 }
