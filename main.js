@@ -62,9 +62,16 @@ posts.forEach(createPost);
 const buttons = Array.from(document.getElementsByClassName('like-button'));
 buttons.forEach(elem => {
     elem.addEventListener('click', function(){
-        this.classList.add('like-button--liked');
-        likedPosts.push(this.dataset.postid);
-        updateLikes(++posts[this.dataset.postid - 1].likes, this.dataset.postid);
+        if (likedPosts.includes(this.dataset.postid)){
+            this.classList.remove('like-button--liked');
+            likedPosts = likedPosts.filter((id) => id != this.dataset.postid);
+            updateLikes(--posts[this.dataset.postid - 1].likes, this.dataset.postid);
+        } else {
+            this.classList.add('like-button--liked');
+            likedPosts.push(this.dataset.postid);
+            updateLikes(++posts[this.dataset.postid - 1].likes, this.dataset.postid);
+        }
+        console.log(likedPosts);
     })
 });
 
@@ -112,13 +119,13 @@ function formatDate(data){
 }
 
 function updateLikes(number, id){
-    document.getElementById('like-counter-' + id).innerHTML = number;
+    document.getElementById('like-counter-' + id).innerText = number;
 }
 
 function checkProfileImage(elem){
     if (elem.author.image == null){
         const nameSeparated = elem.author.name.split(' ');
-        return `<div class="profile-pic-default"><span>${nameSeparated[0][0]}${nameSeparated[1][0]}</span></div>`    
+        return `<div class="profile-pic-default"><span>${nameSeparated[0][0]}${nameSeparated[1][0]}</span></div>`
     } else {
         return `<img class="profile-pic" src=${elem.author.image} alt=${elem.author.name}>`
     }  
